@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,9 +37,16 @@ public class UserController {
     	
     }
     
+    @PutMapping("/update")
+    public ResponseEntity<ResponseStructure<User>> updateUser(@RequestParam int id,@RequestBody User user){
+    	return service.updateUser(id,user);
+    }
     
     
-    
+    @GetMapping("/findbyname")
+    public ResponseEntity<ResponseStructure<User>> findByName(@RequestParam String name){
+    	return service.findByName(name);
+    }
     
     
     

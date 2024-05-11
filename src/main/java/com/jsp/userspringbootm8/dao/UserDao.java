@@ -40,5 +40,23 @@ public class UserDao {
 			return null;
 		}
 	}
+	public User updateUser(int id, User user) {
+		Optional<User>  optional=repo.findById(id);
+		if(optional.isPresent()) {
+//			id is present so i can update the data
+			user.setId(id);
+			return repo.save(user);
+			
+		}
+		return null;
+	}
+	public User findByName(String name) {
+		Optional<User> optional=repo.findByName(name);
+		if(optional.isPresent()) {
+//			name ois present
+			return optional.get();
+		}
+		return null;
+	}
 
 }

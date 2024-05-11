@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.jsp.userspringbootm8.dao.UserDao;
 import com.jsp.userspringbootm8.dto.User;
+import com.jsp.userspringbootm8.exception.UserIdNotFoundException;
+import com.jsp.userspringbootm8.exception.UserNameNotFoundException;
 import com.jsp.userspringbootm8.util.ResponseStructure;
 @Service
 public class UserService {
@@ -32,11 +34,7 @@ public class UserService {
 			return new ResponseEntity<ResponseStructure<User>>(structure,HttpStatus.FOUND);
 		}else {
 //			id is not oresent
-			ResponseStructure<User> structure=new ResponseStructure<User>();
-			structure.setMessage("Sorry id is not present");
-			structure.setHttpStatus(HttpStatus.NOT_FOUND.value());
-			structure.setData(null);
-			return new ResponseEntity<ResponseStructure<User>>(structure,HttpStatus.NOT_FOUND);
+			throw new UserIdNotFoundException("Sorry failed to find the data");
 		}
 	}
 	public ResponseEntity<ResponseStructure<User>> deleteUser(int id) {
@@ -49,11 +47,33 @@ public class UserService {
 			structure.setData(dbUser);
 			return new ResponseEntity<ResponseStructure<User>>(structure,HttpStatus.FORBIDDEN);
 		}else {
+			throw new UserIdNotFoundException("Sorry failed to delete the data");
+		}
+	}
+	public ResponseEntity<ResponseStructure<User>> updateUser(int id, User user) {
+		User dbUser=dao.updateUser(id,user);
+		if(dbUser!=null) {
+//			id is present
 			ResponseStructure<User> structure=new ResponseStructure<User>();
-			structure.setMessage("Sorry id is not present");
-			structure.setHttpStatus(HttpStatus.NOT_FOUND.value());
-			structure.setData(null);
-			return new ResponseEntity<ResponseStructure<User>>(structure,HttpStatus.NOT_FOUND);
+			structure.setMessage("Data updated successfully");
+			structure.setHttpStatus(HttpStatus.OK.value());
+			structure.setData(dbUser);
+			return new ResponseEntity<ResponseStructure<User>>(structure,HttpStatus.OK);
+		}else {
+			throw new UserIdNotFoundException("Sorry failed to update the data");
+		}
+	}
+	public ResponseEntity<ResponseStructure<User>> findByName(String name) {
+		User dbUser=dao.findByName(name);
+		if(dbUser!=null) {
+//			that name is present and data fetched successfully
+			ResponseStructure<User> structure=new ResponseStructure<User>();
+			structure.setMessage("Data fetched successfully");
+			structure.setHttpStatus(HttpStatus.FOUND.value());
+			structure.setData(dbUser);
+			return new ResponseEntity<ResponseStructure<User>>(structure,HttpStatus.FOUND);
+		}else {
+			throw new UserNameNotFoundException("Sorry failed to fetch the data by name");
 		}
 	}
 
